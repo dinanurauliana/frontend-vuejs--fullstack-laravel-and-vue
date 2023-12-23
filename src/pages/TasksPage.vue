@@ -39,6 +39,7 @@ import { storeToRefs } from "pinia"
 
 const store = useTaskStore()
 const { completedTasks, uncompletedTasks } = storeToRefs(store)
+const { fetchAllTasks } = store
 
 
 // store.$patch({
@@ -52,8 +53,7 @@ const { completedTasks, uncompletedTasks } = storeToRefs(store)
 const tasks = ref([])
 
 onMounted(async () => {
-    const { data } = await allTasks()
-    tasks.value = data.data
+    await fetchAllTasks()
 })
 
 
@@ -67,10 +67,7 @@ const completedTasksIsVisible = computed(() => uncompletedTasks.value.length == 
 
 const showComppletedTasks = ref(false)
 
-const handleAddedTask = async (newTask) => {
-    const { data: createdTask } = await createTask(newTask)
-    tasks.value.unshift(createdTask.data)
-}
+
 
 const handleUpdatedTask = async (task) => {
     const { data: updatedTask } = await updateTask(task.id, {
